@@ -2,6 +2,12 @@
 .. _Python: http://www.python.org/
 .. _lxml: http://lxml.de/
 
+EleutherAI Changes
+=================
+Modified the classification function in order to remove elements that have quotes (in order to improve results on forums)
+
+
+
 jusText
 =======
 .. image:: https://api.travis-ci.org/miso-belica/jusText.png?branch=master

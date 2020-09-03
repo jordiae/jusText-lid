@@ -247,6 +247,10 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
                 paragraph.cf_class = 'bad'
             else:
                 paragraph.cf_class = 'short'
+        #changes for forums
+        elif 'blockquote' in paragraph.dom_path:
+            paragraph.cf_class = 'bad'
+        
         elif stopword_density >= stopwords_high:
             if length > length_high:
                 paragraph.cf_class = 'good'
@@ -367,9 +371,19 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
     """
     dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
-    dom = preprocessor(dom)
+#    for item in dom.xpath("//div"):
+#        print(item.text)
+#        print(item.classes)
+#        if "quote" in item.classes:
+#            item.getparent().remove(item)
+#            print("quote")
 
+    dom = preprocessor(dom)
     paragraphs = ParagraphMaker.make_paragraphs(dom)
+
+#    for para in paragraphs:
+#        print(para.xpath)
+
 
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
         stopwords_low, stopwords_high, max_link_density, no_headings)
