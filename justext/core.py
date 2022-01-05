@@ -18,6 +18,7 @@ from xml.sax.handler import ContentHandler
 from .paragraph import Paragraph
 from ._compat import unicode, ignored
 from .utils import is_blank, get_stoplist, get_stoplists
+from ftlangdetect import detect
 
 
 MAX_LINK_DENSITY_DEFAULT = 0.2
@@ -38,6 +39,9 @@ PARAGRAPH_TAGS = [
 DEFAULT_ENCODING = 'utf8'
 DEFAULT_ENC_ERRORS = 'replace'
 CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""", re.IGNORECASE)
+
+ANY_URL_REGEX = r"""(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))"""
+ANY_URL_REGEX = re.compile(ANY_URL_REGEX, re.IGNORECASE)
 
 
 class JustextError(Exception):
@@ -226,13 +230,18 @@ class PathInfo(object):
 def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
-        no_headings=NO_HEADINGS_DEFAULT):
+        no_headings=NO_HEADINGS_DEFAULT, use_langid=True):
     "Context-free paragraph classification."
 
-    stoplist = frozenset(w.lower() for w in stoplist)
+    if not use_langid:
+        stoplist = frozenset(w.lower() for w in stoplist)
     for paragraph in paragraphs:
         length = len(paragraph)
-        stopword_density = paragraph.stopwords_density(stoplist)
+        if use_langid:
+            text = re.sub(ANY_URL_REGEX, '', paragraph.text)
+            stopword_density = detect(text=text, low_memory=False)
+        else:
+            stopword_density = paragraph.stopwords_density(stoplist)
         link_density = paragraph.links_density()
         paragraph.heading = bool(not no_headings and paragraph.is_heading)
 
@@ -360,12 +369,12 @@ def revise_paragraph_classification(paragraphs, max_heading_distance=MAX_HEADING
             j += 1
 
 
-def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
+def justext(html_text, stoplist=None, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
         encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor):
+        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor, use_langid=True):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
@@ -386,7 +395,7 @@ def justext(html_text, stoplist, length_low=LENGTH_LOW_DEFAULT,
 
 
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
-        stopwords_low, stopwords_high, max_link_density, no_headings)
+        stopwords_low, stopwords_high, max_link_density, no_headings, use_langid)
     revise_paragraph_classification(paragraphs, max_heading_distance)
 
     return paragraphs

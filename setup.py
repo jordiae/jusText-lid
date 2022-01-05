@@ -20,7 +20,7 @@ with open("README.rst") as readme:
 
 
 setup(
-    name="jusText",
+    name="jusText-lid",
     version="2.2.0",
     description="Heuristic based boilerplate removal tool",
     long_description=long_description,
@@ -34,6 +34,7 @@ setup(
         'lxml >= 4.4.2; python_version == "2.7"',
         'lxml == 4.3.5; python_version == "3.4"',
         'lxml >= 4.4.2; python_version > "3.4"',
+        'fasttext-langdetect-1.0.3'
     ],
     tests_require=[
         "pytest",
