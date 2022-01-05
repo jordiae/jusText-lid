@@ -227,10 +227,10 @@ class PathInfo(object):
         return self
 
 
-def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
+def classify_paragraphs(paragraphs, stoplist=None, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
-        no_headings=NO_HEADINGS_DEFAULT, use_langid=True):
+        no_headings=NO_HEADINGS_DEFAULT, use_langid=True, langs=None):
     "Context-free paragraph classification."
 
     if not use_langid:
@@ -241,7 +241,10 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
             text = re.sub(ANY_URL_REGEX, '', paragraph.text)
             lang_id_output = detect(text=text, low_memory=False)
             paragraph.lang = lang_id_output['lang']
-            stopword_density = lang_id_output['score']
+            if paragraph.lang in langs:
+                stopword_density = lang_id_output['score']
+            else:
+                stopword_density = 0.0
         else:
             stopword_density = paragraph.stopwords_density(stoplist)
         link_density = paragraph.links_density()
