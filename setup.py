@@ -21,13 +21,13 @@ with open("README.rst") as readme:
 
 setup(
     name="jusText-lid",
-    version="2.2.0",
-    description="Heuristic based boilerplate removal tool",
+    version="2.2.1",
+    description="jusText with language identification (fasttext) instead of stopwords",
     long_description=long_description,
     author="Jan Pomikálek",
     author_email="jan.pomikalek@gmail.com",
-    maintainer="Michal Belica",
-    maintainer_email="miso.belica@gmail.com",
+    maintainer="Jordi Armengol-Estapé",
+    maintainer_email="jordi.armengol.estape@gmail.com",
     url="https://github.com/miso-belica/jusText",
     license="The BSD 2-Clause License",
     install_requires=[
@@ -41,8 +41,8 @@ setup(
         "pytest-cov",
         "coverage",
     ],
-    packages=["justext"],
-    package_data={"justext": ["stoplists/*.txt"]},
+    packages=["justext_lid"],
+    package_data={"justext_lid": ["stoplists/*.txt"]},
     classifiers=(
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",

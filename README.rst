@@ -2,8 +2,14 @@
 .. _Python: http://www.python.org/
 .. _lxml: http://lxml.de/
 
+@jordiae Changes
+================
+Use fasttext instead of stopwords.
+
+
+
 EleutherAI Changes
-=================
+==================
 Modified the classification function in order to remove elements that have quotes (in order to improve results on forums)
 
 
