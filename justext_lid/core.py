@@ -42,6 +42,7 @@ CHARSET_META_TAG_PATTERN = re.compile(br"""<meta[^>]+charset=["']?([^'"/>\s]+)""
 
 ANY_URL_REGEX = r"""(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))"""
 ANY_URL_REGEX = re.compile(ANY_URL_REGEX, re.IGNORECASE)
+LANGID_TH_DEFAULT = 0.3
 
 
 class JustextError(Exception):
@@ -230,7 +231,7 @@ class PathInfo(object):
 def classify_paragraphs(paragraphs, stoplist=None, length_low=LENGTH_LOW_DEFAULT,
         length_high=LENGTH_HIGH_DEFAULT, stopwords_low=STOPWORDS_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
-        no_headings=NO_HEADINGS_DEFAULT, use_langid=True, langs=None):
+        no_headings=NO_HEADINGS_DEFAULT, use_langid=True, langs=None, langid_th=LANGID_TH_DEFAULT):
     "Context-free paragraph classification."
 
     if not use_langid:
@@ -241,10 +242,7 @@ def classify_paragraphs(paragraphs, stoplist=None, length_low=LENGTH_LOW_DEFAULT
             text = re.sub(ANY_URL_REGEX, '', paragraph.text)
             lang_id_output = detect(text=text, low_memory=False)
             paragraph.lang = lang_id_output['lang']
-            if paragraph.lang in langs:
-                stopword_density = lang_id_output['score']
-            else:
-                stopword_density = 0.0
+            langid_score = lang_id_output['score']
         else:
             stopword_density = paragraph.stopwords_density(stoplist)
         link_density = paragraph.links_density()
@@ -264,13 +262,22 @@ def classify_paragraphs(paragraphs, stoplist=None, length_low=LENGTH_LOW_DEFAULT
         #changes for forums
         elif 'blockquote' in paragraph.dom_path:
             paragraph.cf_class = 'bad'
-        
-        elif stopword_density >= stopwords_high:
+
+        # Changes for lid
+        elif use_langid and paragraph.lang not in langs:
+            paragraph.cf_class = 'bad'
+        elif use_langid and langid_score >= langid_th:
             if length > length_high:
                 paragraph.cf_class = 'good'
             else:
                 paragraph.cf_class = 'neargood'
-        elif stopword_density >= stopwords_low:
+        
+        elif not use_langid and stopword_density >= stopwords_high:
+            if length > length_high:
+                paragraph.cf_class = 'good'
+            else:
+                paragraph.cf_class = 'neargood'
+        elif not use_langid and stopword_density >= stopwords_low:
             paragraph.cf_class = 'neargood'
         else:
             paragraph.cf_class = 'bad'

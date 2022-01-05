@@ -18,10 +18,8 @@ Usage (no stopwords required):
 .. code-block:: python
 
    from justext_lid import justext
-   first_paragraph = justext(HTML, langs={'en', 'es'})[0]
+   first_paragraph = justext(HTML, langs={'en', 'es'}, langid_th=0.3)[0]
    first_paragraph_lang = first_paragraph.lang
-
-The language identifier threshold is set with the stopwords density parameters of justText.
 
 
 

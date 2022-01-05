@@ -21,7 +21,7 @@ with open("README.rst") as readme:
 
 setup(
     name="jusText-lid",
-    version="2.2.5",
+    version="2.2.6",
     description="jusText with language identification (fasttext) instead of stopwords",
     long_description=long_description,
     author="Jan Pomikálek",
