@@ -21,7 +21,7 @@ with open("README.rst") as readme:
 
 setup(
     name="jusText-lid",
-    version="2.2.2",
+    version="2.2.4",
     description="jusText with language identification (fasttext) instead of stopwords",
     long_description=long_description,
     author="Jan Pomikálek",
@@ -34,7 +34,8 @@ setup(
         'lxml >= 4.4.2; python_version == "2.7"',
         'lxml == 4.3.5; python_version == "3.4"',
         'lxml >= 4.4.2; python_version > "3.4"',
-        'fasttext-langdetect-1.0.3'
+        'fasttext-langdetect',
+        'wget'
     ],
     tests_require=[
         "pytest",
