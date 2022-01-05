@@ -21,14 +21,14 @@ with open("README.rst") as readme:
 
 setup(
     name="jusText-lid",
-    version="2.2.1",
+    version="2.2.2",
     description="jusText with language identification (fasttext) instead of stopwords",
     long_description=long_description,
     author="Jan Pomikálek",
     author_email="jan.pomikalek@gmail.com",
     maintainer="Jordi Armengol-Estapé",
     maintainer_email="jordi.armengol.estape@gmail.com",
-    url="https://github.com/miso-belica/jusText",
+    url="https://github.com/jordiae/jusText-lid",
     license="The BSD 2-Clause License",
     install_requires=[
         'lxml >= 4.4.2; python_version == "2.7"',

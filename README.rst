@@ -4,7 +4,24 @@
 
 @jordiae Changes
 ================
-Use fasttext instead of stopwords.
+
+Use Fasttext language identifier instead of stopwords.
+
+Install:
+
+.. code-block:: bash
+
+   pip install justext-lid
+
+Usage (no stopwords required):
+
+.. code-block:: python
+
+   from justext_lid import justext
+   first_paragraph = justext(HTML)[0]
+   first_paragraph_lang = first_paragraph.lang
+
+The language identifier threshold is set with the stopwords density parameters of justText.
 
 
 

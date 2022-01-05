@@ -239,7 +239,9 @@ def classify_paragraphs(paragraphs, stoplist, length_low=LENGTH_LOW_DEFAULT,
         length = len(paragraph)
         if use_langid:
             text = re.sub(ANY_URL_REGEX, '', paragraph.text)
-            stopword_density = detect(text=text, low_memory=False)
+            lang_id_output = detect(text=text, low_memory=False)
+            paragraph.lang = lang_id_output['lang']
+            stopword_density = lang_id_output['score']
         else:
             stopword_density = paragraph.stopwords_density(stoplist)
         link_density = paragraph.links_density()
