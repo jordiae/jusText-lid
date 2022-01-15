@@ -239,8 +239,8 @@ def classify_paragraphs(paragraphs, stoplist=None, length_low=LENGTH_LOW_DEFAULT
     for paragraph in paragraphs:
         length = len(paragraph)
         if use_langid:
-            text = re.sub(ANY_URL_REGEX, '', paragraph.text)
-            lang_id_output = detect(text=text, low_memory=False)
+            text_to_detect = re.sub(ANY_URL_REGEX, '', paragraph.text).replace('\n', '')
+            lang_id_output = detect(text=text_to_detect, low_memory=False)
             paragraph.lang = lang_id_output['lang']
             langid_score = lang_id_output['score']
         else:
