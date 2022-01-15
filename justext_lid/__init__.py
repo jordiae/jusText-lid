@@ -11,4 +11,4 @@ from __future__ import absolute_import
 from .core import justext, get_stoplists, get_stoplist
 
 
-__version__ = "2.2.6"
+__version__ = "2.2.7"

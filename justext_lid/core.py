@@ -386,7 +386,8 @@ def justext(html_text, stoplist=None, length_low=LENGTH_LOW_DEFAULT,
         stopwords_high=STOPWORDS_HIGH_DEFAULT, max_link_density=MAX_LINK_DENSITY_DEFAULT,
         max_heading_distance=MAX_HEADING_DISTANCE_DEFAULT, no_headings=NO_HEADINGS_DEFAULT,
         encoding=None, default_encoding=DEFAULT_ENCODING,
-        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor, use_langid=True):
+        enc_errors=DEFAULT_ENC_ERRORS, preprocessor=preprocessor, use_langid=True,
+            langs=None, langid_th=LANGID_TH_DEFAULT):
     """
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
@@ -407,7 +408,7 @@ def justext(html_text, stoplist=None, length_low=LENGTH_LOW_DEFAULT,
 
 
     classify_paragraphs(paragraphs, stoplist, length_low, length_high,
-        stopwords_low, stopwords_high, max_link_density, no_headings, use_langid)
+        stopwords_low, stopwords_high, max_link_density, no_headings, use_langid, langs, langid_th)
     revise_paragraph_classification(paragraphs, max_heading_distance)
 
     return paragraphs
