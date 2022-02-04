@@ -392,6 +392,8 @@ def justext(html_text, stoplist=None, length_low=LENGTH_LOW_DEFAULT,
     Converts an HTML page into a list of classified paragraphs. Each paragraph
     is represented as instance of class ˙˙justext.paragraph.Paragraph˙˙.
     """
+    html_text = html_text.replace('<br>',
+                                  '<div></div>')  # See http://austral.clientes.ejes.com/noticia_completa.cfm?id=30993919&desde=44523&fecha=44525&tipo=X&canal=&mime=&qidx_cursor=1&page=1&total_pages=10&rpp=25&return_url=%2Fdefault.cfm%3Fdesde%3D44523%26fecha%3D44525%26tipo%3DX%26canal%3D%26mime%3D%26qidx_cursor%3D1
     dom = html_to_dom(html_text, default_encoding, encoding, enc_errors)
 #    for item in dom.xpath("//div"):
 #        print(item.text)
